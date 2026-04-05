@@ -1,735 +1,658 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex, nofollow">
-<title>Off-season — 10-Week Program</title>
+<title>🍺 Bakdag Teller</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: Georgia, serif; background: #0d0d0d; color: #e8e0d0; min-height: 100vh; }
-  button { cursor: pointer; font-family: Georgia, serif; }
-  .header { background: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 100%); border-bottom: 1px solid #2a2a2a; padding: 36px 32px 28px; }
-  .header-inner { max-width: 920px; margin: 0 auto; }
-  .header-sub { font-size: 11px; letter-spacing: 0.25em; color: #888; text-transform: uppercase; margin-bottom: 10px; font-family: 'Courier New', monospace; }
-  .header h1 { font-size: clamp(28px, 5vw, 44px); font-weight: 400; color: #f0e8d8; line-height: 1.1; letter-spacing: -0.02em; }
-  .header p { color: #888; font-size: 14px; margin-top: 10px; font-family: 'Courier New', monospace; letter-spacing: 0.05em; }
-  .tabs { border-bottom: 1px solid #222; background: #111; overflow-x: auto; }
-  .tabs-inner { max-width: 920px; margin: 0 auto; display: flex; min-width: max-content; }
-  .tab-btn { background: none; border: none; border-bottom: 2px solid transparent; color: #555; padding: 14px 18px; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; font-family: 'Courier New', monospace; transition: color 0.2s; white-space: nowrap; }
-  .tab-btn.active { border-bottom: 2px solid #e8e0d0; color: #f0e8d8; }
-  .content { max-width: 920px; margin: 0 auto; padding: 28px 24px 60px; }
-  .tab-pane { display: none; }
-  .tab-pane.active { display: block; }
-  /* Progress */
-  .progress-label { font-size: 11px; color: #555; font-family: 'Courier New', monospace; letter-spacing: 0.1em; margin-bottom: 6px; }
-  .progress-bar-wrap { background: #1a1a1a; border-radius: 2px; height: 4px; margin-bottom: 24px; }
-  .progress-bar { height: 4px; border-radius: 2px; background: #7EB8A4; transition: width 0.4s; }
-  /* Phase */
-  .phase-btns { display: flex; gap: 12px; margin-bottom: 32px; flex-wrap: wrap; }
-  .phase-btn { background: transparent; border: 1px solid #333; border-radius: 2px; padding: 12px 22px; transition: all 0.2s; text-align: left; }
-  .phase-btn .pw { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; font-family: 'Courier New', monospace; color: #666; margin-bottom: 3px; }
-  .phase-btn .pn { font-size: 15px; font-weight: 600; color: #ccc; }
-  .phase-intro { background: #161616; border: 1px solid #2a2a2a; border-radius: 2px; padding: 16px 20px; margin-bottom: 24px; font-family: 'Courier New', monospace; font-size: 13px; color: #aaa; line-height: 1.7; }
-  .deload-box { background: #161616; border: 1px solid #2a2a2a; border-left: 3px solid #C8A84A; border-radius: 2px; padding: 16px 20px; margin-bottom: 24px; font-family: 'Courier New', monospace; font-size: 13px; color: #aaa; line-height: 1.7; }
-  .deload-title { color: #C8A84A; font-weight: 700; margin-bottom: 6px; letter-spacing: 0.1em; font-size: 11px; text-transform: uppercase; }
-  /* Day cards */
-  .day-card { background: #111; border: 1px solid #252525; border-radius: 2px; overflow: hidden; margin-bottom: 10px; }
-  .day-card.completed { border-color: #2a3d2a; }
-  .day-header { width: 100%; background: none; border: none; padding: 18px 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-  .day-label { border-radius: 2px; padding: 3px 10px; font-size: 10px; letter-spacing: 0.2em; font-family: 'Courier New', monospace; font-weight: 700; min-width: 70px; text-align: center; }
-  .day-name { font-size: 15px; color: #e0d8c8; font-weight: 500; text-align: left; }
-  .day-card.completed .day-name { color: #7EB8A4; }
-  .day-type { font-size: 12px; color: #555; font-family: 'Courier New', monospace; margin-top: 2px; text-align: left; }
-  .arrow { color: #444; font-size: 18px; transition: transform 0.2s; display: inline-block; }
-  .arrow.open { transform: rotate(180deg); }
-  .exercise-list { border-top: 1px solid #1e1e1e; display: none; padding: 4px 0 12px; }
-  .exercise-list.open { display: block; }
-  .ex-header { display: grid; grid-template-columns: 1fr auto auto; padding: 8px 20px; font-size: 10px; letter-spacing: 0.15em; color: #444; font-family: 'Courier New', monospace; text-transform: uppercase; border-bottom: 1px solid #1a1a1a; }
-  .ex-row { display: grid; grid-template-columns: 1fr auto auto; padding: 11px 20px; border-bottom: 1px solid #161616; align-items: start; gap: 8px; }
-  .ex-name { font-size: 14px; color: #ddd; font-weight: 500; }
-  .ex-note { font-size: 11px; color: #4a4a4a; font-family: 'Courier New', monospace; margin-top: 3px; }
-  .ex-sets-wrap { display: flex; flex-direction: column; align-items: center; min-width: 50px; gap: 3px; }
-  .set-btn { background: none; border: 1px solid #333; border-radius: 2px; color: #555; font-family: 'Courier New', monospace; font-size: 11px; padding: 2px 7px; cursor: pointer; transition: all 0.2s; width: 100%; text-align: center; }
-  .set-btn.done { background: #2a3d2a; border-color: #4a8a4a; color: #7EB8A4; }
-  .ex-reps { text-align: right; font-size: 13px; color: #888; font-family: 'Courier New', monospace; min-width: 80px; padding-top: 2px; }
-  .weight-input { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 2px; color: #e0d8c8; font-family: 'Courier New', monospace; font-size: 11px; padding: 3px 6px; width: 64px; margin-top: 6px; outline: none; transition: border-color 0.2s; }
-  .weight-input:focus { border-color: #555; }
-  .weight-input::placeholder { color: #3a3a3a; }
-  /* Nutrition */
-  .nutrition-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin-bottom: 32px; }
-  .nutrition-card { background: #111; border: 1px solid #252525; border-radius: 2px; padding: 18px; }
-  .nutrition-icon { font-size: 22px; margin-bottom: 8px; }
-  .nutrition-title { font-size: 13px; font-weight: 600; color: #e0d8c8; margin-bottom: 6px; }
-  .nutrition-desc { font-size: 12px; color: #777; line-height: 1.6; font-family: 'Courier New', monospace; }
-  .meal-selector { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
-  .meal-day-btn { background: transparent; border: 1px solid #333; border-radius: 2px; padding: 8px 16px; transition: all 0.2s; }
-  .meal-day-btn .md-label { font-size: 11px; font-weight: 700; color: #888; font-family: 'Courier New', monospace; letter-spacing: 0.1em; }
-  .meal-day-btn .md-theme { font-size: 10px; color: #555; font-family: 'Courier New', monospace; margin-top: 2px; }
-  .meal-panel { display: none; background: #111; border: 1px solid #252525; border-radius: 2px; padding: 20px 24px; }
-  .meal-panel.active { display: block; }
-  .meal-panel-title { font-size: 14px; font-weight: 600; color: #e0d8c8; margin-bottom: 16px; }
-  .meal-row { display: flex; gap: 16px; padding: 11px 0; border-bottom: 1px solid #1a1a1a; align-items: flex-start; }
-  .meal-row:last-child { border-bottom: none; }
-  .meal-time { min-width: 110px; font-size: 11px; font-family: 'Courier New', monospace; letter-spacing: 0.1em; text-transform: uppercase; padding-top: 2px; }
-  .meal-food { font-size: 13px; color: #999; line-height: 1.6; }
-  /* Calendar */
-  .cal-year-nav { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; }
-  .cal-year-label { font-size: 22px; font-weight: 400; color: #f0e8d8; }
-  .cal-nav-btn { background: none; border: 1px solid #333; border-radius: 2px; color: #888; font-size: 16px; padding: 4px 12px; transition: all 0.2s; font-family: 'Courier New', monospace; }
-  .cal-nav-btn:hover { border-color: #666; color: #e0d8c8; }
-  .cal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-  .cal-month { background: #111; border: 1px solid #252525; border-radius: 2px; padding: 16px; }
-  .cal-month-name { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; font-family: 'Courier New', monospace; color: #888; margin-bottom: 12px; }
-  .cal-dow { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; margin-bottom: 4px; }
-  .cal-dow span { font-size: 9px; text-align: center; color: #444; font-family: 'Courier New', monospace; letter-spacing: 0.1em; padding: 2px 0; }
-  .cal-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
-  .cal-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 12px; font-family: 'Courier New', monospace; color: #555; border-radius: 2px; border: 1px solid transparent; transition: all 0.15s; }
-  .cal-day.active-day { color: #e0d8c8; cursor: pointer; }
-  .cal-day.active-day:hover { border-color: #444; }
-  .cal-day.workout { background: #1e3a2a; border-color: #4a8a5a; color: #7EB8A4; cursor: pointer; }
-  .cal-day.workout.run { background: #1e2a3a; border-color: #4a6a8a; color: #7EB8D8; }
-  .cal-day.today { border-color: #C8A84A !important; color: #C8A84A !important; }
-  .cal-legend { display: flex; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
-  .cal-legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; font-family: 'Courier New', monospace; color: #666; }
-  .cal-legend-dot { width: 14px; height: 14px; border-radius: 2px; border: 1px solid; }
-  .cal-stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-bottom: 28px; }
-  .cal-stat { background: #111; border: 1px solid #252525; border-radius: 2px; padding: 14px; text-align: center; }
-  .cal-stat-num { font-size: 26px; font-weight: 400; color: #f0e8d8; font-family: 'Courier New', monospace; }
-  .cal-stat-label { font-size: 10px; color: #555; font-family: 'Courier New', monospace; letter-spacing: 0.15em; text-transform: uppercase; margin-top: 4px; }
-  .cal-type-toggle { display: flex; gap: 8px; margin-bottom: 20px; }
-  .cal-type-btn { background: transparent; border: 1px solid #333; border-radius: 2px; padding: 6px 14px; font-size: 11px; font-family: 'Courier New', monospace; letter-spacing: 0.1em; text-transform: uppercase; color: #555; transition: all 0.2s; }
-  .cal-type-btn.gym-active { background: #1e3a2a; border-color: #4a8a5a; color: #7EB8A4; }
-  .cal-type-btn.run-active { background: #1e2a3a; border-color: #4a6a8a; color: #7EB8D8; }
-  /* Injury */
-  .inj-section { margin-bottom: 36px; }
-  .inj-section-title { font-size: 13px; font-weight: 700; color: #e0d8c8; letter-spacing: 0.15em; text-transform: uppercase; font-family: 'Courier New', monospace; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid #222; }
-  .inj-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
-  .inj-card { background: #111; border: 1px solid #252525; border-radius: 2px; padding: 18px; }
-  .inj-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
-  .inj-card-name { font-size: 14px; color: #ddd; font-weight: 500; }
-  .inj-card-badge { font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; font-family: 'Courier New', monospace; padding: 2px 8px; border-radius: 2px; white-space: nowrap; }
-  .inj-card-timing { font-size: 11px; color: #7EB8A4; font-family: 'Courier New', monospace; margin-bottom: 6px; }
-  .inj-card-desc { font-size: 12px; color: #666; line-height: 1.6; font-family: 'Courier New', monospace; }
-  .tip-list { display: flex; flex-direction: column; gap: 10px; }
-  .tip-item { background: #111; border: 1px solid #252525; border-radius: 2px; padding: 14px 18px; display: flex; gap: 14px; align-items: flex-start; }
-  .tip-icon { font-size: 18px; min-width: 28px; }
-  .tip-title { font-size: 13px; font-weight: 600; color: #e0d8c8; margin-bottom: 4px; }
-  .tip-desc { font-size: 12px; color: #666; line-height: 1.6; font-family: 'Courier New', monospace; }
-  .speed-card { background: #111; border: 1px solid #252525; border-left: 3px solid #E8D87C; border-radius: 2px; padding: 16px 20px; margin-bottom: 10px; }
-  .speed-card-title { font-size: 13px; font-weight: 600; color: #E8D87C; margin-bottom: 6px; }
-  .speed-card-desc { font-size: 13px; color: #888; line-height: 1.6; font-family: 'Courier New', monospace; }
-  .bad-neck-box { background: #1a1010; border: 1px solid #3a2020; border-left: 3px solid #E87C7C; border-radius: 2px; padding: 20px 24px; margin-top: 28px; }
-  .bad-neck-title { font-size: 13px; font-weight: 600; color: #E87C7C; margin-bottom: 6px; }
-  .bad-neck-row { display: flex; gap: 16px; padding: 9px 0; border-bottom: 1px solid #2a1a1a; align-items: flex-start; }
-  .bad-neck-row:last-child { border-bottom: none; }
-  .bad-neck-orig { min-width: 190px; font-size: 12px; color: #555; font-family: 'Courier New', monospace; padding-top: 1px; text-decoration: line-through; }
-  .bad-neck-sub { font-size: 13px; color: #bbb; line-height: 1.5; }
-  /* Neck */
-  .neck-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
-  .neck-item { background: #111; border: 1px solid #252525; border-left: 3px solid #E87C7C; border-radius: 2px; padding: 14px 18px; display: flex; gap: 14px; align-items: flex-start; }
-  .neck-num { color: #E87C7C; font-family: 'Courier New', monospace; font-size: 12px; min-width: 24px; padding-top: 1px; }
-  .neck-text { font-size: 14px; color: #bbb; line-height: 1.5; }
-  .mob-card { background: #111; border: 1px solid #252525; border-left: 3px solid #8EB8D8; border-radius: 2px; padding: 20px 24px; }
-  .mob-title { font-size: 13px; font-weight: 600; color: #e0d8c8; margin-bottom: 14px; }
-  .mob-row { padding: 11px 0; border-bottom: 1px solid #1a1a1a; }
-  .mob-row:last-child { border-bottom: none; }
-  .mob-row-top { display: flex; justify-content: space-between; margin-bottom: 4px; }
-  .mob-name { font-size: 14px; color: #ddd; }
-  .mob-sets { font-size: 12px; color: #8EB8D8; font-family: 'Courier New', monospace; }
-  .mob-desc { font-size: 12px; color: #555; font-family: 'Courier New', monospace; }
-  .section-label { font-size: 11px; letter-spacing: 0.2em; color: #555; font-family: 'Courier New', monospace; text-transform: uppercase; margin-bottom: 8px; }
-  .section-h2 { font-size: 26px; font-weight: 400; color: #f0e8d8; margin: 0 0 8px 0; }
-  .section-sub { color: #666; font-size: 13px; font-family: 'Courier New', monospace; margin-bottom: 28px; }
+  :root {
+    --amber: #E8A020;
+    --dark-amber: #C47A10;
+    --foam: #FFF8E7;
+    --bg: #1A1208;
+    --card: #241A0A;
+    --card-border: #3D2A08;
+    --text: #F5E6C8;
+    --muted: #8A7355;
+    --danger: #E84040;
+    --max: 24;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 20% 0%, rgba(232,160,32,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 100%, rgba(232,160,32,0.05) 0%, transparent 50%);
+  }
+
+  header {
+    text-align: center;
+    padding: 32px 20px 16px;
+    border-bottom: 1px solid var(--card-border);
+  }
+
+  header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 10vw, 80px);
+    color: var(--amber);
+    letter-spacing: 4px;
+    line-height: 1;
+    text-shadow: 0 0 40px rgba(232,160,32,0.3);
+  }
+
+  header p {
+    color: var(--muted);
+    font-size: 14px;
+    margin-top: 6px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .setup-panel {
+    max-width: 480px;
+    margin: 40px auto;
+    padding: 0 20px;
+  }
+
+  .setup-panel h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 2px;
+    color: var(--amber);
+    margin-bottom: 20px;
+  }
+
+  .player-input-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  input[type="text"] {
+    flex: 1;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    color: var(--text);
+    padding: 12px 16px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 16px;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  input[type="text"]:focus {
+    border-color: var(--amber);
+  }
+
+  input[type="text"]::placeholder {
+    color: var(--muted);
+  }
+
+  .btn {
+    background: var(--amber);
+    color: var(--bg);
+    border: none;
+    padding: 12px 20px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 1px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    white-space: nowrap;
+  }
+
+  .btn:hover { background: var(--dark-amber); }
+  .btn:active { transform: scale(0.97); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--amber);
+    border: 1px solid var(--amber);
+  }
+
+  .btn-outline:hover {
+    background: rgba(232,160,32,0.1);
+  }
+
+  .btn-start {
+    width: 100%;
+    padding: 16px;
+    font-size: 24px;
+    margin-top: 24px;
+  }
+
+  .player-list-setup {
+    list-style: none;
+    margin-bottom: 16px;
+  }
+
+  .player-list-setup li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    padding: 10px 14px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    font-size: 15px;
+  }
+
+  .remove-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    padding: 2px 6px;
+    border-radius: 3px;
+    transition: color 0.15s, background 0.15s;
+  }
+
+  .remove-btn:hover {
+    color: var(--danger);
+    background: rgba(232,64,64,0.1);
+  }
+
+  /* === GAME === */
+  .game-panel { display: none; }
+
+  .game-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--card-border);
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .game-header .total-info {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  .game-header .total-info span {
+    color: var(--amber);
+    font-size: 28px;
+  }
+
+  .players-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+    padding: 24px 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .player-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .player-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--amber);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+
+  .player-card.done {
+    border-color: var(--amber);
+    background: #2A1F08;
+  }
+
+  .player-card.done::before {
+    transform: scaleX(1);
+  }
+
+  .player-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: 2px;
+    color: var(--text);
+    margin-bottom: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .progress-bar-wrap {
+    background: var(--bg);
+    border-radius: 2px;
+    height: 6px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--amber);
+    border-radius: 2px;
+    transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .count-display {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+
+  .count-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 64px;
+    line-height: 1;
+    color: var(--amber);
+    text-shadow: 0 0 20px rgba(232,160,32,0.2);
+    transition: transform 0.15s;
+  }
+
+  .count-number.bump {
+    transform: scale(1.2);
+  }
+
+  .count-total {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--muted);
+  }
+
+  .pint-btn {
+    width: 100%;
+    padding: 14px;
+    font-size: 20px;
+    background: rgba(232,160,32,0.12);
+    color: var(--amber);
+    border: 1px solid rgba(232,160,32,0.3);
+    border-radius: 4px;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s, border-color 0.15s;
+    position: relative;
+  }
+
+  .pint-btn:hover:not(:disabled) {
+    background: rgba(232,160,32,0.22);
+    border-color: var(--amber);
+  }
+
+  .pint-btn:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+
+  .pint-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+  }
+
+  .done-badge {
+    display: none;
+    text-align: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 3px;
+    color: var(--amber);
+    padding: 10px;
+    border: 1px solid var(--amber);
+    border-radius: 4px;
+    background: rgba(232,160,32,0.08);
+  }
+
+  .player-card.done .pint-btn { display: none; }
+  .player-card.done .done-badge { display: block; }
+
+  /* Confirm modal */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-overlay.active { display: flex; }
+
+  .modal {
+    background: var(--card);
+    border: 1px solid var(--amber);
+    border-radius: 8px;
+    padding: 32px 28px;
+    max-width: 340px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 0 60px rgba(232,160,32,0.15);
+  }
+
+  .modal .pint-icon {
+    font-size: 52px;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .modal h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 2px;
+    color: var(--amber);
+    margin-bottom: 8px;
+  }
+
+  .modal p {
+    color: var(--muted);
+    font-size: 15px;
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+
+  .modal p strong {
+    color: var(--text);
+  }
+
+  .modal-btns {
+    display: flex;
+    gap: 10px;
+  }
+
+  .modal-btns .btn {
+    flex: 1;
+    font-size: 18px;
+    padding: 13px;
+  }
+
+  /* Leaderboard / ranking */
+  .ranking-bar {
+    background: var(--card);
+    border-top: 1px solid var(--card-border);
+    padding: 16px 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .ranking-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .ranking-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .rank-chip {
+    background: var(--bg);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: border-color 0.3s;
+  }
+
+  .rank-chip .rank-name { color: var(--text); }
+  .rank-chip .rank-count { color: var(--amber); font-weight: 700; }
+
+  .rank-chip.leading {
+    border-color: var(--amber);
+    background: rgba(232,160,32,0.08);
+  }
+
+  /* Victory screen */
+  .victory { display: none; text-align: center; padding: 60px 20px; }
+  .victory h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 12vw, 96px);
+    color: var(--amber);
+    letter-spacing: 4px;
+    text-shadow: 0 0 60px rgba(232,160,32,0.5);
+    margin-bottom: 16px;
+  }
+
+  .confetti-row {
+    font-size: 40px;
+    margin-bottom: 24px;
+    animation: sway 2s ease-in-out infinite;
+  }
+
+  @keyframes sway {
+    0%, 100% { transform: rotate(-3deg); }
+    50% { transform: rotate(3deg); }
+  }
+
+  .victory p { color: var(--muted); font-size: 16px; }
+
+  /* Utility */
+  .hidden { display: none !important; }
+  .text-muted { color: var(--muted); }
+
+  @keyframes popIn {
+    0% { transform: scale(0.8); opacity: 0; }
+    70% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .pop { animation: popIn 0.3s ease forwards; }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="header-inner">
-    <div class="header-sub">10-Week Program · 80kg · Off-season · Running Phase 3</div>
-    <h1>Off-season</h1>
-    <p>Cervical-safe · Upper-body dominant · Speed-preserving · No supplements</p>
+<header>
+  <h1>🍺 Bakdag</h1>
+  <p>24 pinten · niemand liegt · iedereen telt</p>
+</header>
+
+<!-- SETUP -->
+<div class="setup-panel" id="setupPanel">
+  <h2>Wie drinkt mee?</h2>
+
+  <div class="player-input-row">
+    <input type="text" id="nameInput" placeholder="Naam speler…" maxlength="20" autocomplete="off" />
+    <button class="btn" onclick="addPlayer()">+ Toevoegen</button>
+  </div>
+
+  <ul class="player-list-setup" id="playerListSetup"></ul>
+
+  <button class="btn btn-start" id="startBtn" onclick="startGame()" style="display:none">
+    🍺 Start de Bakdag
+  </button>
+</div>
+
+<!-- GAME -->
+<div class="game-panel" id="gamePanel">
+  <div class="game-header">
+    <div class="total-info">Totaal gedronken: <span id="totalDrunk">0</span></div>
+    <button class="btn btn-outline" onclick="resetAll()" style="font-size:15px;padding:8px 14px">↩ Reset</button>
+  </div>
+
+  <div class="players-grid" id="playersGrid"></div>
+
+  <div class="ranking-bar" id="rankingBar">
+    <div class="ranking-title">Ranglijst</div>
+    <div class="ranking-list" id="rankingList"></div>
   </div>
 </div>
 
-<div class="tabs">
-  <div class="tabs-inner">
-    <button class="tab-btn active" onclick="switchTab('schedule',this)">Program</button>
-    <button class="tab-btn" onclick="switchTab('nutrition',this)">Nutrition</button>
-    <button class="tab-btn" onclick="switchTab('calendar',this)">Calendar</button>
-    <button class="tab-btn" onclick="switchTab('injury',this)">Injury Prevention</button>
-    <button class="tab-btn" onclick="switchTab('neck',this)">Neck Safety</button>
-  </div>
-</div>
-
-<div class="content">
-
-  <!-- PROGRAM TAB -->
-  <div id="tab-schedule" class="tab-pane active">
-    <div class="progress-label" id="progress-label">SESSIONS COMPLETED — 0 / 24</div>
-    <div class="progress-bar-wrap"><div class="progress-bar" id="progress-bar" style="width:0%"></div></div>
-    <div class="phase-btns">
-      <button class="phase-btn" id="pbtn-1" onclick="switchPhase(1)">
-        <div class="pw">Weeks 1–3</div><div class="pn">Phase 1 — Reactivation</div>
-      </button>
-      <button class="phase-btn" id="pbtn-2" onclick="switchPhase(2)">
-        <div class="pw">Weeks 4–7</div><div class="pn">Phase 2 — Build</div>
-      </button>
-      <button class="phase-btn" id="pbtn-3" onclick="switchPhase(3)">
-        <div class="pw">Weeks 8–10</div><div class="pn">Phase 3 — Peak & Lean</div>
-      </button>
-    </div>
-    <div class="phase-intro" id="phase-intro"></div>
-    <div class="deload-box" id="deload-box" style="display:none">
-      <div class="deload-title">⚡ Deload — Week 5</div>
-      <span id="deload-text"></span>
-    </div>
-    <div id="days-container"></div>
-  </div>
-
-  <!-- NUTRITION TAB -->
-  <div id="tab-nutrition" class="tab-pane">
-    <div class="section-label">Guidelines</div>
-    <h2 class="section-h2">Nutrition Strategy</h2>
-    <p class="section-sub">~2400 kcal · ~130–145g protein · No fish · No supplements</p>
-    <div class="nutrition-grid">
-      <div class="nutrition-card"><div class="nutrition-icon">🥩</div><div class="nutrition-title">Protein target</div><div class="nutrition-desc">~130–145g/day. Eggs, chicken, beef, turkey, Greek yogurt, cottage cheese.</div></div>
-      <div class="nutrition-card"><div class="nutrition-icon">🍚</div><div class="nutrition-title">Carb timing</div><div class="nutrition-desc">Bigger carb meals around workouts. Reduce on full rest days.</div></div>
-      <div class="nutrition-card"><div class="nutrition-icon">🥑</div><div class="nutrition-title">Healthy fats</div><div class="nutrition-desc">Olive oil, avocado, nuts, eggs. Anti-inflammatory — good for cervical hernias.</div></div>
-      <div class="nutrition-card"><div class="nutrition-icon">💧</div><div class="nutrition-title">Hydration</div><div class="nutrition-desc">2.5–3L water daily. More on run days.</div></div>
-      <div class="nutrition-card"><div class="nutrition-icon">📉</div><div class="nutrition-title">Caloric deficit</div><div class="nutrition-desc">~300–400 kcal below maintenance. Don't cut hard on heavy training days.</div></div>
-      <div class="nutrition-card"><div class="nutrition-icon">⚡</div><div class="nutrition-title">Speed & power</div><div class="nutrition-desc">Don't undereat carbs — explosive speed is carb-dependent. A steep deficit kills fast-twitch output.</div></div>
-    </div>
-    <div class="section-label">Sample Days of Eating — mix &amp; match</div>
-    <div class="meal-selector" id="meal-selector"></div>
-    <div id="meal-panels"></div>
-  </div>
-
-  <!-- CALENDAR TAB -->
-  <div id="tab-calendar" class="tab-pane">
-    <div class="section-label">Training log</div>
-    <h2 class="section-h2">2026 Calendar</h2>
-    <p class="section-sub" style="margin-bottom:16px">Tap a day to mark it as a gym session. Tap again to mark as a run. Tap a third time to clear.</p>
-    <div class="cal-stats" id="cal-stats"></div>
-    <div class="cal-legend">
-      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#1e3a2a;border-color:#4a8a5a"></div>Gym session</div>
-      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#1e2a3a;border-color:#4a6a8a"></div>Run</div>
-      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:transparent;border-color:#C8A84A"></div>Today</div>
-    </div>
-    <div class="cal-grid" id="cal-grid"></div>
-  </div>
-
-  <!-- INJURY PREVENTION TAB -->
-  <div id="tab-injury" class="tab-pane">
-    <div class="section-label">Off-season maintenance</div>
-    <h2 class="section-h2">Injury Prevention</h2>
-    <p class="section-sub">Stretching, mobility, speed preservation & tips for a soccer player with cervical hernias</p>
-    <div class="inj-section">
-      <div class="inj-section-title">⚡ Protecting & Building Your Speed</div>
-      <div class="speed-card"><div class="speed-card-title">Don't build bulky legs</div><div class="speed-card-desc">Heavy high-volume quad work adds mass that slows acceleration. The lower body program keeps volume intentionally moderate — enough to strengthen, not enough to bulk.</div></div>
-      <div class="speed-card"><div class="speed-card-title">Train explosiveness, not just strength</div><div class="speed-card-desc">From Phase 2 onward, add 2–3 sets of box jumps or broad jumps before your lower body session (when fresh). 3×5 is enough — don't do these on tired legs.</div></div>
-      <div class="speed-card"><div class="speed-card-title">Hip flexor strength = sprint speed</div><div class="speed-card-desc">Weak hip flexors are the most underrated limiter of top speed. The hanging knee raises and dead bugs in the program address this directly.</div></div>
-      <div class="speed-card"><div class="speed-card-title">Nordic Curls protect your speed</div><div class="speed-card-desc">Nordic Curls build eccentric hamstring strength — the exact quality that prevents hamstring tears at full sprint. In the program from Phase 1 and never optional.</div></div>
-      <div class="speed-card"><div class="speed-card-title">Don't run yourself flat in Phase 3</div><div class="speed-card-desc">Keep at least one run as short sprints or strides (6–8×80m at 85–90% effort with full recovery). This maintains fast-twitch fiber recruitment that long slow runs erode.</div></div>
-    </div>
-    <div class="inj-section">
-      <div class="inj-section-title">🌅 Daily Mobility — every morning (10–15 min)</div>
-      <div class="inj-grid">
-        <div class="inj-card"><div class="inj-card-top"><div class="inj-card-name">Hip Flexor Stretch (kneeling)</div><span class="inj-card-badge" style="background:#7EB8A422;color:#7EB8A4;border:1px solid #7EB8A444">Daily</span></div><div class="inj-card-timing">2×45s per side</div><div class="inj-card-desc">Rear knee on ground, drive hips forward, squeeze rear glute. Critical for soccer players — tight hip flexors reduce stride length and strain the lower back.</div></div>
-        <div class="inj-card"><div class="inj-card-top"><div class="inj-card-name">90/90 Hip Stretch</div><span class="inj-card-badge" style="background:#7EB8A422;color:#7EB8A4;border:1px solid #7EB8A444">Daily</span></div><div class="inj-card-timing">2×45s per side</div><div class="inj-card-desc">Sit on floor with both legs at 90° angles, lean over front shin. Opens hip rotation range — the movement used most in cutting and turning at speed.</div></div>
-        <div class="inj-card"><div class="inj-card-top"><div class="inj-card-name">Thoracic Rotation (seated)</div><span class="inj-card-badge" style="background:#7EB8A422;color:#7EB8A4;border:1px solid #7EB8A444">Daily</span></div><div class="inj-card-timing">2×10/side</div><div class="inj-card-desc">Sit cross-legged, hands behind head, rotate torso. When thoracic spine stiffens, the cervical spine compensates — this prevents that transfer.</div></div>
-        <div class="inj-card"><div class="inj-card-top"><div class="inj-card-name">World's Greatest Stretch</div><span class="inj-card-badge" style="background:#E8A87C22;color:#E8A87C;border:1px solid #E8A87C44">Pre-workout</span></div><div class="inj-card-timing">5 reps/side</div><div class="inj-card-desc">Lunge forward, same-side hand on ground, opposite arm rotates to ceiling. Best single pre-workout primer — hits hip flexor, thoracic, and hamstring together.</div></div>
-        <div class="inj-card"><div class="inj-card-top"><div class="inj-card-name">Standing Hamstring Stretch</div><span class="inj-card-badge" style="background:#7EB8A422;color:#7EB8A4;border:1px solid #7EB8A444">Daily</span></div><div class="inj-card-timing">2×40s per side</div><div class="inj-card-desc">Foot on low surface, slight forward hinge at hip. Hamstring flexibility directly influences sprint mechanics and reduces injury risk at top speed.</div></div>
-        <div class="inj-card"><div class="inj-card-top"><div class="inj-card-name">Calf & Achilles Stretch</div><span class="inj-card-badge" style="background:#7EB8A422;color:#7EB8A4;border:1px solid #7EB8A444">Daily</span></div><div class="inj-card-timing">2×40s per side</div><div class="inj-card-desc">Against wall: straight leg for gastroc, bent knee for Achilles. Soccer players neglect this constantly — 90 seconds daily prevents a lot of pain.</div></div>
-      </div>
-    </div>
-    <div class="inj-section">
-      <div class="inj-section-title">🔥 Pre-Workout Activation — every gym session (5 min)</div>
-      <div class="inj-grid">
-        <div class="inj-card"><div class="inj-card-name" style="margin-bottom:6px">Glute Bridge</div><div class="inj-card-timing">2×15 reps</div><div class="inj-card-desc">Activates glutes before lower body work. Dormant glutes shift load to hamstrings and lower back.</div></div>
-        <div class="inj-card"><div class="inj-card-name" style="margin-bottom:6px">Scapular Push-ups</div><div class="inj-card-timing">2×12 reps</div><div class="inj-card-desc">Protract/retract scapula without bending elbows. Primes the shoulder before pressing and protects the cervical chain.</div></div>
-        <div class="inj-card"><div class="inj-card-name" style="margin-bottom:6px">Chin Tucks</div><div class="inj-card-timing">2×15 reps</div><div class="inj-card-desc">Always before upper body. Resets cervical posture and activates deep neck flexors before any shoulder loading.</div></div>
-        <div class="inj-card"><div class="inj-card-name" style="margin-bottom:6px">Arm Circles + Shoulder CARs</div><div class="inj-card-timing">10 reps each direction</div><div class="inj-card-desc">Slow controlled articular rotations through full range. Reduces shoulder impingement risk during pressing.</div></div>
-      </div>
-    </div>
-    <div class="inj-section">
-      <div class="inj-section-title">🧊 Recovery Tips</div>
-      <div class="tip-list">
-        <div class="tip-item"><div class="tip-icon">🛁</div><div><div class="tip-title">Cold shower after intense sessions</div><div class="tip-desc">2–3 minutes cold water on worked muscles after Phase 2 and 3 sessions. Reduces inflammation and speeds recovery.</div></div></div>
-        <div class="tip-item"><div class="tip-icon">😴</div><div><div class="tip-title">Sleep is your best recovery tool</div><div class="tip-desc">7.5–9 hours. Growth hormone peaks in the first 90 minutes of deep sleep. Even one hour less measurably reduces next-day strength output.</div></div></div>
-        <div class="tip-item"><div class="tip-icon">🦵</div><div><div class="tip-title">Foam roll calves, quads & IT band 2–3x/week</div><div class="tip-desc">Not daily. Focus on calves and lateral quad. Reduces stiffness and maintains tissue quality across the 10 weeks.</div></div></div>
-        <div class="tip-item"><div class="tip-icon">🚶</div><div><div class="tip-title">Walk on rest days</div><div class="tip-desc">20–30 minutes easy walking on off-days keeps blood flowing, reduces soreness, adds no meaningful fatigue.</div></div></div>
-        <div class="tip-item"><div class="tip-icon">📅</div><div><div class="tip-title">Deload week — Week 5</div><div class="tip-desc">Drop all sets by 40%, remove heaviest compound sets, keep every exercise and frequency the same. You will come out of it stronger.</div></div></div>
-      </div>
-    </div>
-    <div class="bad-neck-box">
-      <div class="bad-neck-title">🔴 Bad Neck Day — Exercise Substitutions</div>
-      <p style="font-size:13px;color:#888;font-family:'Courier New',monospace;margin-bottom:16px;line-height:1.6">Increased stiffness, arm weakness, or tingling? Don't skip the gym — just swap these:</p>
-      <div class="bad-neck-row"><div class="bad-neck-orig">DB Shoulder Press</div><div class="bad-neck-sub">Cable Lateral Raise only — no overhead pressing</div></div>
-      <div class="bad-neck-row"><div class="bad-neck-orig">Barbell Row</div><div class="bad-neck-sub">Chest-supported DB Row on incline bench</div></div>
-      <div class="bad-neck-row"><div class="bad-neck-orig">Weighted Pull-up</div><div class="bad-neck-sub">Bodyweight pull-up or assisted pull-up only</div></div>
-      <div class="bad-neck-row"><div class="bad-neck-orig">Skull Crusher</div><div class="bad-neck-sub">Tricep pushdown (cable) — no neck extension under load</div></div>
-      <div class="bad-neck-row"><div class="bad-neck-orig">Any pressing feeling wrong</div><div class="bad-neck-sub">Replace entire push session with face pulls, lateral raises, and core only</div></div>
-      <div class="bad-neck-row"><div class="bad-neck-orig">Lat Pulldown feeling off</div><div class="bad-neck-sub">Seated cable row with neutral grip — less cervical involvement</div></div>
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <span class="pint-icon">🍺</span>
+    <h3>Pint bevestigen</h3>
+    <p id="modalText">…</p>
+    <div class="modal-btns">
+      <button class="btn btn-outline" onclick="closeModal()">Annuleer</button>
+      <button class="btn" onclick="confirmPint()">Ja, opdrinken!</button>
     </div>
   </div>
-
-  <!-- NECK SAFETY TAB -->
-  <div id="tab-neck" class="tab-pane">
-    <div class="section-label">Cervical Hernias C-spine</div>
-    <h2 class="section-h2">Neck Safety Protocol</h2>
-    <p class="section-sub">Non-negotiable throughout all 10 weeks.</p>
-    <div class="neck-list">
-      <div class="neck-item"><span class="neck-num">01</span><span class="neck-text">No overhead pressing behind the neck — ever</span></div>
-      <div class="neck-item"><span class="neck-num">02</span><span class="neck-text">Avoid heavy axial barbell loading — use goblet squat, safety bar, or leg press instead if any symptoms arise</span></div>
-      <div class="neck-item"><span class="neck-num">03</span><span class="neck-text">No extreme neck flexion or extension under load</span></div>
-      <div class="neck-item"><span class="neck-num">04</span><span class="neck-text">Cable Face Pulls every single session — most protective exercise for cervical discs</span></div>
-      <div class="neck-item"><span class="neck-num">05</span><span class="neck-text">If any tingling or shooting pain occurs in arm/shoulder, stop immediately — not after the set</span></div>
-      <div class="neck-item"><span class="neck-num">06</span><span class="neck-text">Supported rows (chest on bench) preferred over free-standing bent-over rows</span></div>
-      <div class="neck-item"><span class="neck-num">07</span><span class="neck-text">Lat Pulldown: front only — never behind the neck</span></div>
-      <div class="neck-item"><span class="neck-num">08</span><span class="neck-text">Sleep with a cervical support pillow</span></div>
-    </div>
-    <div class="mob-card">
-      <div class="mob-title">Daily Neck & Shoulder Mobility (10 min)</div>
-      <div class="mob-row"><div class="mob-row-top"><span class="mob-name">Chin Tucks</span><span class="mob-sets">2×15 reps</span></div><div class="mob-desc">Retract chin gently, hold 2s — most important exercise for cervical discs</div></div>
-      <div class="mob-row"><div class="mob-row-top"><span class="mob-name">Cervical Rotation</span><span class="mob-sets">2×10/side</span></div><div class="mob-desc">Slow and gentle, never forced</div></div>
-      <div class="mob-row"><div class="mob-row-top"><span class="mob-name">Thoracic Extension</span><span class="mob-sets">2×10 reps</span></div><div class="mob-desc">Over foam roller or hands behind head</div></div>
-      <div class="mob-row"><div class="mob-row-top"><span class="mob-name">Doorway Chest Stretch</span><span class="mob-sets">3×30s</span></div><div class="mob-desc">Arms at 90°, open chest passively</div></div>
-      <div class="mob-row"><div class="mob-row-top"><span class="mob-name">Scapular Wall Slides</span><span class="mob-sets">2×12 reps</span></div><div class="mob-desc">Back to wall, arms slide up/down maintaining contact</div></div>
-      <div class="mob-row"><div class="mob-row-top"><span class="mob-name">Dead Hang</span><span class="mob-sets">2×20s</span></div><div class="mob-desc">Decompresses cervical spine — only if pain-free</div></div>
-    </div>
-  </div>
-
 </div>
 
 <script>
-const phases = {
-  1: {
-    color: "#7EB8A4",
-    intro: "🔄 3 days/week. Reactivate upper body strength and rebuild connective tissue. Lower body includes Nordic Curls from day one — the single best hamstring injury prevention investment for a speed player. Don't rush loads.",
-    showDeload: false,
-    days: [
-      { day:"Monday", type:"Upper Body — Push", label:"PUSH", color:"#7EB8A4", exercises:[
-        {name:"Dumbbell Bench Press",sets:"4",reps:"12",note:"Moderate weight, full range of motion"},
-        {name:"Incline DB Press",sets:"3",reps:"12",note:"30–45° incline"},
-        {name:"Cable Flye",sets:"3",reps:"15",note:"Controlled squeeze at center"},
-        {name:"Seated DB Lateral Raise",sets:"3",reps:"15",note:"Light, strict form — no swinging"},
-        {name:"Cable Face Pull",sets:"4",reps:"15",note:"Non-negotiable for cervical health"},
-        {name:"Overhead Tricep Extension (DB)",sets:"3",reps:"12",note:""},
-        {name:"Plank",sets:"3",reps:"40s",note:""}
-      ]},
-      { day:"Wednesday", type:"Lower Body — Strength & Speed", label:"LOWER", color:"#A4B87E", exercises:[
-        {name:"Goblet Squat",sets:"3",reps:"10",note:"Moderate load — quality over weight"},
-        {name:"Romanian Deadlift",sets:"3",reps:"10",note:"Feel the stretch, controlled"},
-        {name:"Nordic Curl",sets:"3",reps:"5–6",note:"Slow 4s eccentric — hamstring injury prevention"},
-        {name:"Leg Press",sets:"3",reps:"12",note:"Moderate weight"},
-        {name:"Leg Curl (machine)",sets:"3",reps:"12",note:"Posterior chain balance"},
-        {name:"Standing Calf Raise",sets:"3",reps:"15",note:"On step, full stretch"},
-        {name:"Hanging Knee Raise",sets:"3",reps:"12",note:"Hip flexor strength = sprint speed"},
-        {name:"Ab Wheel Rollout",sets:"3",reps:"10",note:""}
-      ]},
-      { day:"Friday", type:"Upper Body — Pull", label:"PULL", color:"#7E9AB8", exercises:[
-        {name:"Assisted Pull-up",sets:"4",reps:"8–10",note:"Neutral grip, machine or jump assist"},
-        {name:"Seated Cable Row",sets:"4",reps:"12",note:"Neutral grip, full scapular retraction"},
-        {name:"Single-arm DB Row",sets:"3",reps:"10/side",note:"Chest supported on incline bench"},
-        {name:"Cable Face Pull",sets:"3",reps:"15",note:""},
-        {name:"Incline DB Curl",sets:"3",reps:"12",note:"Full stretch at bottom"},
-        {name:"Hammer Curl",sets:"3",reps:"12",note:""},
-        {name:"Dead Bug",sets:"3",reps:"8/side",note:"Slow and deliberate"}
-      ]}
-    ]
-  },
-  2: {
-    color: "#E8A87C",
-    intro: "📈 4 days/week. Three upper body sessions, one lower body day. Progressive overload across all movements. Lower body loads increase slightly — off-season means you can push more, but keep mass gains minimal to protect speed.",
-    showDeload: true,
-    deloadText: "Week 5 is your deload. Drop all sets by 40%, remove heaviest compound sets, keep every exercise and frequency identical. One week of backing off now means a stronger Phase 3.",
-    days: [
-      { day:"Monday", type:"Upper Body — Push", label:"PUSH", color:"#E8A87C", exercises:[
-        {name:"Dumbbell Bench Press",sets:"4",reps:"10",note:"Increase load from phase 1"},
-        {name:"Incline DB Press",sets:"4",reps:"10",note:""},
-        {name:"Cable Flye",sets:"3",reps:"12",note:""},
-        {name:"Seated DB Shoulder Press",sets:"3",reps:"10",note:"Strict form, pain-free range"},
-        {name:"Cable Lateral Raise",sets:"3",reps:"12",note:"Single arm, controlled"},
-        {name:"Cable Face Pull",sets:"4",reps:"15",note:""},
-        {name:"Tricep Pushdown (cable)",sets:"3",reps:"12",note:""},
-        {name:"Decline Crunch",sets:"3",reps:"15",note:""}
-      ]},
-      { day:"Wednesday", type:"Lower Body — Strength & Speed", label:"LOWER", color:"#C8A87C", exercises:[
-        {name:"Goblet Squat",sets:"3",reps:"10",note:"Slight load increase — still not maxing out"},
-        {name:"Romanian Deadlift",sets:"4",reps:"8",note:"Build load, maintain hinge quality"},
-        {name:"Nordic Curl",sets:"3",reps:"6–8",note:"Every session — non-negotiable"},
-        {name:"Leg Press",sets:"3",reps:"10",note:"Moderate-heavy"},
-        {name:"Leg Curl (machine)",sets:"3",reps:"12",note:""},
-        {name:"Seated Calf Raise",sets:"3",reps:"15",note:""},
-        {name:"Cable Crunch",sets:"3",reps:"15",note:""},
-        {name:"Hanging Knee Raise",sets:"3",reps:"15",note:"Hip flexor strength for sprint speed"}
-      ]},
-      { day:"Thursday", type:"Upper Body — Pull", label:"PULL", color:"#7C9EE8", exercises:[
-        {name:"Pull-up (bodyweight)",sets:"4",reps:"6–8",note:"Full ROM, no kipping"},
-        {name:"Barbell Row",sets:"4",reps:"8",note:"Chest on incline bench to reduce neck strain"},
-        {name:"Seated Cable Row",sets:"3",reps:"10",note:""},
-        {name:"Lat Pulldown",sets:"3",reps:"10",note:"Front only — wide grip"},
-        {name:"Cable Face Pull",sets:"4",reps:"15",note:""},
-        {name:"Incline DB Curl",sets:"3",reps:"10",note:""},
-        {name:"Hammer Curl",sets:"3",reps:"10",note:""}
-      ]},
-      { day:"Saturday", type:"Upper Body — Full (Volume)", label:"FULL", color:"#A8C87C", exercises:[
-        {name:"Dips",sets:"4",reps:"10–12",note:"Upright torso, full ROM"},
-        {name:"Pull-up",sets:"4",reps:"max",note:""},
-        {name:"DB Bench Press",sets:"3",reps:"12",note:"Moderate, pump focus"},
-        {name:"Cable Row",sets:"3",reps:"12",note:""},
-        {name:"Cable Face Pull",sets:"3",reps:"20",note:""},
-        {name:"DB Curl + Overhead Extension",sets:"3",reps:"12+12",note:"Superset"},
-        {name:"Cable Lateral Raise",sets:"3",reps:"15",note:""}
-      ]}
-    ]
-  },
-  3: {
-    color: "#8EB8D8",
-    intro: "🔥 4 days/week + 2–3 runs. Peak gym intensity. Lower body stays controlled — running already loads the legs. Keep at least one run as short sprints or strides (6–8×80m at 85–90%) to maintain fast-twitch output.",
-    showDeload: false,
-    days: [
-      { day:"Monday", type:"Upper Body — Push (Intensity)", label:"PUSH", color:"#8EB8D8", exercises:[
-        {name:"Dumbbell Bench Press",sets:"5",reps:"6–8",note:"Peak load — controlled descent"},
-        {name:"Incline DB Press",sets:"4",reps:"8",note:""},
-        {name:"Cable Flye superset Push-up",sets:"3",reps:"12 + max",note:"Straight into push-ups"},
-        {name:"Seated DB Shoulder Press",sets:"4",reps:"8",note:""},
-        {name:"Cable Lateral Raise",sets:"3",reps:"15",note:""},
-        {name:"Cable Face Pull",sets:"4",reps:"15",note:""},
-        {name:"Skull Crusher (EZ bar)",sets:"3",reps:"10",note:"Light-moderate, elbows stable"}
-      ]},
-      { day:"Tuesday", type:"Lower Body — Strength & Speed", label:"LOWER", color:"#78B8A4", exercises:[
-        {name:"Romanian Deadlift",sets:"3",reps:"8",note:"Moderate load — running already loading legs"},
-        {name:"Nordic Curl",sets:"4",reps:"6",note:"Slow 4s eccentric — most important hamstring exercise"},
-        {name:"Leg Press",sets:"3",reps:"10",note:"Not maxing — supplementary only"},
-        {name:"Leg Curl (machine)",sets:"3",reps:"12",note:""},
-        {name:"Standing Calf Raise",sets:"3",reps:"15",note:""},
-        {name:"Ab Wheel Rollout",sets:"4",reps:"12",note:""},
-        {name:"Hanging Leg Raise",sets:"3",reps:"12",note:"Straight legs if possible"}
-      ]},
-      { day:"Thursday", type:"Upper Body — Pull (Intensity)", label:"PULL", color:"#6888C8", exercises:[
-        {name:"Weighted Pull-up",sets:"4",reps:"5–6",note:"Belt or dumbbell between feet"},
-        {name:"Barbell Row",sets:"4",reps:"6–8",note:"Heavier than phase 2"},
-        {name:"Seated Cable Row",sets:"3",reps:"8",note:"Heavy, full retraction"},
-        {name:"Lat Pulldown",sets:"3",reps:"10",note:""},
-        {name:"Cable Face Pull",sets:"4",reps:"15",note:""},
-        {name:"Incline DB Curl superset Hammer Curl",sets:"3",reps:"10+10",note:"No rest between"}
-      ]},
-      { day:"Saturday", type:"Upper Body — Push (Volume)", label:"PUSH", color:"#88B878", exercises:[
-        {name:"Dips (weighted)",sets:"4",reps:"8",note:"Add weight if bodyweight is easy"},
-        {name:"DB Bench Press",sets:"3",reps:"10",note:"Moderate, pump-focused"},
-        {name:"Incline DB Press",sets:"3",reps:"10",note:""},
-        {name:"Cable Flye",sets:"3",reps:"12",note:""},
-        {name:"Cable Face Pull",sets:"3",reps:"20",note:""},
-        {name:"Overhead Tricep Extension",sets:"3",reps:"12",note:""},
-        {name:"Tricep Pushdown",sets:"3",reps:"15",note:"Drop set on last set"}
-      ]}
-    ]
-  }
-};
+  const MAX = 24;
+  let players = [];
+  let pendingPlayer = null;
 
-const mealDays = [
-  { label:"Day A", theme:"Classic High-Protein", color:"#7EB8A4", meals:[
-    {time:"Breakfast",food:"3 eggs + 2 egg whites scrambled, oats with banana & honey, black coffee"},
-    {time:"Lunch",food:"200g grilled chicken breast, white rice, large mixed salad with olive oil & lemon"},
-    {time:"Snack",food:"Full-fat Greek yogurt + handful of walnuts"},
-    {time:"Post-workout",food:"Cottage cheese with berries + a slice of whole grain bread"},
-    {time:"Dinner",food:"Lean beef steak, sweet potato, steamed broccoli with butter"}
-  ]},
-  { label:"Day B", theme:"Chicken & Egg Focus", color:"#E8A87C", meals:[
-    {time:"Breakfast",food:"4-egg omelette with cheese & spinach, 2 slices whole grain toast, coffee"},
-    {time:"Lunch",food:"Chicken wrap: tortilla, grilled chicken, avocado, tomato, Greek yogurt instead of mayo"},
-    {time:"Snack",food:"Hard-boiled eggs (2–3) + apple"},
-    {time:"Post-workout",food:"Full-fat milk smoothie: banana, peanut butter, oats — no powder needed"},
-    {time:"Dinner",food:"Ground beef stir-fry with bell peppers, onions, served over rice"}
-  ]},
-  { label:"Day C", theme:"Mediterranean Lean", color:"#8EB8D8", meals:[
-    {time:"Breakfast",food:"Full-fat Greek yogurt bowl: granola, mixed berries, drizzle of honey, side of boiled egg"},
-    {time:"Lunch",food:"Grilled chicken thighs, quinoa, roasted vegetables (zucchini, peppers, eggplant) with olive oil"},
-    {time:"Snack",food:"Cottage cheese + sliced cucumber & tomato, pinch of salt"},
-    {time:"Post-workout",food:"2 eggs on whole grain toast with avocado"},
-    {time:"Dinner",food:"Lamb mince with chickpeas, tomato sauce & herbs, served with flatbread"}
-  ]},
-  { label:"Day D", theme:"Red Meat & Hearty", color:"#C87878", meals:[
-    {time:"Breakfast",food:"Overnight oats: oats, full-fat milk, chia seeds, banana — prepped the night before"},
-    {time:"Lunch",food:"Beef mince bolognese with pasta, parmesan, side salad"},
-    {time:"Snack",food:"Handful of mixed nuts + full-fat milk glass"},
-    {time:"Post-workout",food:"Greek yogurt with honey + rice cake with peanut butter"},
-    {time:"Dinner",food:"Grilled ribeye or sirloin, roasted potatoes with rosemary, green beans"}
-  ]},
-  { label:"Day E", theme:"Poultry Variety", color:"#A878C8", meals:[
-    {time:"Breakfast",food:"Pancakes made with oats, eggs & banana (no flour), topped with Greek yogurt & berries"},
-    {time:"Lunch",food:"Turkey mince burger patty with whole grain bun, tomato, lettuce, mustard + sweet potato fries"},
-    {time:"Snack",food:"Cottage cheese with pineapple chunks"},
-    {time:"Post-workout",food:"Boiled eggs (3) + orange"},
-    {time:"Dinner",food:"Chicken thigh stew with white beans, tomatoes & spinach, crusty bread"}
-  ]}
-];
+  const nameInput = document.getElementById('nameInput');
+  nameInput.addEventListener('keydown', e => { if (e.key === 'Enter') addPlayer(); });
 
-// ── Storage ──────────────────────────────────────────────
-function save(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch(e) {} }
-function load(key, def) { try { const v = localStorage.getItem(key); return v !== null ? JSON.parse(v) : def; } catch(e) { return def; } }
-
-// Phase weeks: how many times each phase repeats
-const phaseWeeks = {1: 3, 2: 4, 3: 3};
-
-// ── Progress bar ─────────────────────────────────────────
-function totalSessions() {
-  return Object.keys(phases).reduce((a, ph) => a + phases[ph].days.length * phaseWeeks[ph], 0);
-}
-function completedSessions() {
-  let count = 0;
-  Object.keys(phases).forEach(ph => {
-    const weeks = phaseWeeks[ph];
-    phases[ph].days.forEach((day, di) => {
-      for (let w = 1; w <= weeks; w++) {
-        const data = load('session-'+ph+'-'+di+'-w'+w, {});
-        const total = day.exercises.reduce((a,ex) => a + parseInt(ex.sets), 0);
-        if (Object.values(data).filter(Boolean).length === total && total > 0) count++;
-      }
-    });
-  });
-  return count;
-}
-function updateProgressBar() {
-  const total = totalSessions(), done = completedSessions();
-  const bar = document.getElementById('progress-bar');
-  const lbl = document.getElementById('progress-label');
-  if (bar) bar.style.width = Math.round(done/total*100)+'%';
-  if (lbl) lbl.textContent = 'SESSIONS COMPLETED — '+done+' / '+total;
-}
-
-// ── Active week per phase ─────────────────────────────────
-function getActiveWeek(phaseId) { return load('activeWeek-'+phaseId, 1); }
-function setActiveWeek(phaseId, w) { save('activeWeek-'+phaseId, w); }
-
-// ── Weight tracking ───────────────────────────────────────
-function saveWeight(phaseId, dayIdx, exIdx, week, val) {
-  save('weight-'+phaseId+'-'+dayIdx+'-'+exIdx+'-w'+week, val);
-}
-function loadWeight(phaseId, dayIdx, exIdx, week) {
-  return load('weight-'+phaseId+'-'+dayIdx+'-'+exIdx+'-w'+week, '');
-}
-
-// ── Set toggle ────────────────────────────────────────────
-function toggleSet(phaseId, dayIdx, exIdx, setIdx, btn) {
-  const w = getActiveWeek(phaseId);
-  const key = 'session-'+phaseId+'-'+dayIdx+'-w'+w;
-  const data = load(key, {});
-  const sk = exIdx+'-'+setIdx;
-  data[sk] = !data[sk];
-  save(key, data);
-  btn.classList.toggle('done', data[sk]);
-  btn.textContent = data[sk] ? '✓' : (setIdx+1);
-  const day = phases[phaseId].days[dayIdx];
-  const total = day.exercises.reduce((a,ex) => a + parseInt(ex.sets), 0);
-  const done = Object.values(data).filter(Boolean).length;
-  const card = btn.closest('.day-card');
-  if (card) card.classList.toggle('completed', done === total);
-  updateProgressBar();
-}
-
-
-
-// ── Tab switching ─────────────────────────────────────────
-let activePhase = 1, activeMealDay = 0;
-function switchTab(tab, btn) {
-  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-'+tab).classList.add('active');
-  if (btn) btn.classList.add('active');
-  if (tab === 'calendar') renderCalendar();
-}
-
-// ── Phase switching ───────────────────────────────────────
-function switchPhase(p) { activePhase = p; renderPhase(); }
-function renderPhase() {
-  const phase = phases[activePhase];
-  const colors = {1:"#7EB8A4",2:"#E8A87C",3:"#8EB8D8"};
-  document.querySelectorAll('.phase-btn').forEach((btn,i) => {
-    const c = colors[i+1];
-    if (i+1 === activePhase) {
-      btn.style.background = c; btn.style.borderColor = c;
-      btn.querySelector('.pw').style.color = '#0d0d0d';
-      btn.querySelector('.pn').style.color = '#0d0d0d';
-    } else {
-      btn.style.background = 'transparent'; btn.style.borderColor = '#333';
-      btn.querySelector('.pw').style.color = '#666';
-      btn.querySelector('.pn').style.color = '#ccc';
+  function addPlayer() {
+    const name = nameInput.value.trim();
+    if (!name) return;
+    if (players.find(p => p.name.toLowerCase() === name.toLowerCase())) {
+      nameInput.style.borderColor = 'var(--danger)';
+      setTimeout(() => nameInput.style.borderColor = '', 1000);
+      return;
     }
-  });
-  const intro = document.getElementById('phase-intro');
-  intro.textContent = phase.intro; intro.style.borderLeftColor = phase.color;
-  const db = document.getElementById('deload-box');
-  if (phase.showDeload) { db.style.display='block'; document.getElementById('deload-text').textContent=phase.deloadText; }
-  else db.style.display='none';
-  const container = document.getElementById('days-container');
-  container.innerHTML = '';
-
-  // Week selector + reset button
-  const weeks = phaseWeeks[activePhase];
-  const activeW = getActiveWeek(activePhase);
-  const weekBar = document.createElement('div');
-  weekBar.style.cssText = 'display:flex;align-items:center;gap:8px;margin-bottom:20px;flex-wrap:wrap;';
-  weekBar.innerHTML = '<span style="font-size:11px;color:#555;font-family:Courier New,monospace;letter-spacing:0.15em;text-transform:uppercase;margin-right:4px">Week</span>';
-  for (let w = 1; w <= weeks; w++) {
-    const isActive = w === activeW;
-    const wb = document.createElement('button');
-    wb.textContent = w;
-    wb.style.cssText = 'background:'+(isActive ? phase.color : 'transparent')+';border:1px solid '+(isActive ? phase.color : '#333')+';border-radius:2px;color:'+(isActive ? '#0d0d0d' : '#666')+';font-family:Courier New,monospace;font-size:13px;padding:4px 12px;transition:all 0.2s;font-weight:'+(isActive?'700':'400');
-    wb.onclick = (function(ww){ return function(){ setActiveWeek(activePhase, ww); renderPhase(); }; })(w);
-    weekBar.appendChild(wb);
+    players.push({ name, count: 0 });
+    nameInput.value = '';
+    nameInput.focus();
+    renderSetupList();
   }
 
-  container.appendChild(weekBar);
+  function removePlayer(idx) {
+    players.splice(idx, 1);
+    renderSetupList();
+  }
 
-  phase.days.forEach((day, dayIdx) => {
-    const card = document.createElement('div');
-    card.className = 'day-card';
-    const savedData = load('session-'+activePhase+'-'+dayIdx+'-w'+activeW, {});
-    const totalSets = day.exercises.reduce((a,ex) => a+parseInt(ex.sets), 0);
-    if (Object.values(savedData).filter(Boolean).length === totalSets && totalSets > 0) card.classList.add('completed');
-    const exRows = day.exercises.map((ex,exIdx) => {
-      const n = parseInt(ex.sets);
-      const btns = Array.from({length:n},(_,si) => {
-        const done = savedData[exIdx+'-'+si] || false;
-        return '<button class="set-btn'+(done?' done':'')+'" onclick="toggleSet('+activePhase+','+dayIdx+','+exIdx+','+si+',this)">'+(done?'✓':(si+1))+'</button>';
-      }).join('');
-            const curWeight = loadWeight(activePhase, dayIdx, exIdx, activeW);
-      // Previous week in same phase
-      let prevWeight = activeW > 1 ? loadWeight(activePhase, dayIdx, exIdx, activeW-1) : '';
-      // If week 1 of this phase, look for same exercise name in previous phase
-      if (!prevWeight && activeW === 1 && activePhase > 1) {
-        const prevPhaseId = activePhase - 1;
-        const prevPhaseWeekCount = phaseWeeks[prevPhaseId];
-        const prevPhaseDays = phases[prevPhaseId].days;
-        // Search all days in previous phase for matching exercise name
-        prevPhaseDays.forEach((pd, pdi) => {
-          pd.exercises.forEach((pex, pexi) => {
-            if (pex.name === ex.name) {
-              const w = loadWeight(prevPhaseId, pdi, pexi, prevPhaseWeekCount);
-              if (w) prevWeight = w;
-            }
-          });
-        });
-      }
-      const placeholder = prevWeight ? prevWeight+'kg' : 'kg';
-      const weightField = '<input class="weight-input" type="number" min="0" step="0.5" value="'+curWeight+'" placeholder="'+placeholder+'" oninput="saveWeight('+activePhase+','+dayIdx+','+exIdx+','+activeW+',this.value)" onclick="event.stopPropagation()">';
-      return '<div class="ex-row"><div><div class="ex-name">'+ex.name+'</div>'+(ex.note?'<div class="ex-note">↳ '+ex.note+'</div>':'')+weightField+'</div><div class="ex-sets-wrap">'+btns+'</div><div class="ex-reps">'+ex.reps+'</div></div>';
-    }).join('');
-    card.innerHTML = '<button class="day-header" onclick="toggleDay(this)"><div style="display:flex;align-items:center;gap:16px;flex:1"><span class="day-label" style="background:'+day.color+'22;color:'+day.color+';border:1px solid '+day.color+'44">'+day.label+'</span><div><div class="day-name">'+day.day+'</div><div class="day-type">'+day.type+'</div></div></div><div class="arrow">▾</div></button><div class="exercise-list"><div class="ex-header"><span>Exercise</span><span style="text-align:center;min-width:50px">Sets</span><span style="text-align:right;min-width:80px">Reps</span></div>'+exRows+'</div>';
-    container.appendChild(card);
-  });
-  updateProgressBar();
-}
+  function renderSetupList() {
+    const ul = document.getElementById('playerListSetup');
+    ul.innerHTML = players.map((p, i) => `
+      <li>
+        <span>🧍 ${p.name}</span>
+        <button class="remove-btn" onclick="removePlayer(${i})">✕</button>
+      </li>
+    `).join('');
+    document.getElementById('startBtn').style.display = players.length >= 2 ? 'block' : 'none';
+  }
 
-function toggleDay(btn) {
-  const list = btn.nextElementSibling;
-  const arrow = btn.querySelector('.arrow');
-  list.classList.toggle('open'); arrow.classList.toggle('open');
-}
+  function startGame() {
+    if (players.length < 2) return;
+    document.getElementById('setupPanel').style.display = 'none';
+    document.getElementById('gamePanel').style.display = 'block';
+    renderGame();
+  }
 
-// ── Meals ─────────────────────────────────────────────────
-function renderMeals() {
-  const sel = document.getElementById('meal-selector');
-  const panels = document.getElementById('meal-panels');
-  sel.innerHTML = ''; panels.innerHTML = '';
-  mealDays.forEach((d,i) => {
-    const btn = document.createElement('button');
-    btn.className = 'meal-day-btn'; btn.id = 'mdbtn-'+i;
-    btn.onclick = () => switchMealDay(i);
-    btn.innerHTML = '<div class="md-label">'+d.label+'</div><div class="md-theme">'+d.theme+'</div>';
-    sel.appendChild(btn);
-    const panel = document.createElement('div');
-    panel.className = 'meal-panel'; panel.id = 'meal-panel-'+i;
-    panel.style.borderLeftColor = d.color;
-    panel.innerHTML = '<div class="meal-panel-title">'+d.label+' — '+d.theme+'</div>'+d.meals.map(m=>'<div class="meal-row"><div class="meal-time" style="color:'+d.color+'">'+m.time+'</div><div class="meal-food">'+m.food+'</div></div>').join('');
-    panels.appendChild(panel);
-  });
-  switchMealDay(0);
-}
-function switchMealDay(i) {
-  activeMealDay = i;
-  document.querySelectorAll('.meal-panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById('meal-panel-'+i).classList.add('active');
-  mealDays.forEach((d,j) => {
-    const btn = document.getElementById('mdbtn-'+j);
-    if (j===i) { btn.style.background=d.color; btn.style.borderColor=d.color; btn.querySelector('.md-label').style.color='#0d0d0d'; btn.querySelector('.md-theme').style.color='#0d0d0d'; }
-    else { btn.style.background='transparent'; btn.style.borderColor='#333'; btn.querySelector('.md-label').style.color='#888'; btn.querySelector('.md-theme').style.color='#555'; }
-  });
-}
+  function renderGame() {
+    const grid = document.getElementById('playersGrid');
+    grid.innerHTML = players.map((p, i) => `
+      <div class="player-card ${p.count >= MAX ? 'done' : ''}" id="card-${i}">
+        <div class="player-name">${p.name}</div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-fill" id="bar-${i}" style="width:${(p.count/MAX)*100}%"></div>
+        </div>
+        <div class="count-display">
+          <div class="count-number" id="num-${i}">${p.count}</div>
+          <div class="count-total">/ ${MAX}</div>
+        </div>
+        <button class="pint-btn" onclick="requestPint(${i})" id="btn-${i}" ${p.count >= MAX ? 'disabled' : ''}>
+          🍺 Pint Bijschrijven
+        </button>
+        <div class="done-badge">✔ GEDAAN!</div>
+      </div>
+    `).join('');
+    updateRanking();
+    updateTotal();
+  }
 
-// ── Calendar ──────────────────────────────────────────────
-const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-const DOW = ['Mo','Tu','We','Th','Fr','Sa','Su'];
-let calYear = 2026;
+  function requestPint(idx) {
+    pendingPlayer = idx;
+    const p = players[idx];
+    document.getElementById('modalText').innerHTML =
+      `<strong>${p.name}</strong> staat op ${p.count} pinten.<br>Pint ${p.count + 1} bijschrijven?`;
+    document.getElementById('modalOverlay').classList.add('active');
+  }
 
-function getCalData() { return load('cal-'+calYear, {}); }
-function saveCalData(data) { save('cal-'+calYear, data); }
+  function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('active');
+    pendingPlayer = null;
+  }
 
-function cycleDay(dateStr) {
-  const data = getCalData();
-  const cur = data[dateStr] || 0;
-  // 0 = nothing, 1 = gym, 2 = run
-  data[dateStr] = (cur + 1) % 3;
-  if (data[dateStr] === 0) delete data[dateStr];
-  saveCalData(data);
-  renderCalendar();
-}
+  function confirmPint() {
+    if (pendingPlayer === null) return;
+    closeModal();
+    const i = pendingPlayer;
+    const p = players[i];
+    if (p.count >= MAX) return;
+    p.count++;
 
-function renderCalendar() {
-  const data = getCalData();
-  const today = new Date();
-  const todayStr = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+    // Update bar
+    document.getElementById(`bar-${i}`).style.width = `${(p.count/MAX)*100}%`;
 
-  // Stats
-  let gymCount = 0, runCount = 0;
-  Object.values(data).forEach(v => { if(v===1) gymCount++; if(v===2) runCount++; });
-  const statsEl = document.getElementById('cal-stats');
-  statsEl.innerHTML = [
-    {num: gymCount, label: 'Gym sessions'},
-    {num: runCount, label: 'Runs'},
-    {num: gymCount+runCount, label: 'Total workouts'},
-    {num: Math.round((gymCount+runCount)/52*10)/10, label: 'Avg / week'}
-  ].map(s=>'<div class="cal-stat"><div class="cal-stat-num">'+s.num+'</div><div class="cal-stat-label">'+s.label+'</div></div>').join('');
+    // Bump number
+    const numEl = document.getElementById(`num-${i}`);
+    numEl.textContent = p.count;
+    numEl.classList.remove('bump');
+    void numEl.offsetWidth;
+    numEl.classList.add('bump');
+    setTimeout(() => numEl.classList.remove('bump'), 200);
 
-  const grid = document.getElementById('cal-grid');
-  grid.innerHTML = '';
-
-  for (let m = 0; m < 12; m++) {
-    const monthDiv = document.createElement('div');
-    monthDiv.className = 'cal-month';
-    const firstDay = new Date(calYear, m, 1);
-    const daysInMonth = new Date(calYear, m+1, 0).getDate();
-    // Monday=0 offset
-    let startOffset = firstDay.getDay() - 1;
-    if (startOffset < 0) startOffset = 6;
-
-    let html = '<div class="cal-month-name">'+MONTHS[m]+'</div>';
-    html += '<div class="cal-dow">'+DOW.map(d=>'<span>'+d+'</span>').join('')+'</div>';
-    html += '<div class="cal-days">';
-    for (let i=0; i<startOffset; i++) html += '<div class="cal-day"></div>';
-    for (let d=1; d<=daysInMonth; d++) {
-      const dateStr = calYear+'-'+(m+1)+'-'+d;
-      const type = data[dateStr] || 0;
-      const isToday = (dateStr === todayStr);
-      let cls = 'cal-day active-day';
-      if (type===1) cls += ' workout';
-      if (type===2) cls += ' workout run';
-      if (isToday) cls += ' today';
-      html += '<div class="'+cls+'" onclick="cycleDay(\''+dateStr+'\')">'+d+'</div>';
+    if (p.count >= MAX) {
+      const card = document.getElementById(`card-${i}`);
+      card.classList.add('done');
     }
-    html += '</div>';
-    monthDiv.innerHTML = html;
-    grid.appendChild(monthDiv);
-  }
-}
 
-// ── Init ──────────────────────────────────────────────────
-renderPhase();
-renderMeals();
+    updateTotal();
+    updateRanking();
+    pendingPlayer = null;
+  }
+
+  function updateTotal() {
+    const total = players.reduce((s, p) => s + p.count, 0);
+    document.getElementById('totalDrunk').textContent = total;
+  }
+
+  function updateRanking() {
+    const sorted = [...players].sort((a, b) => b.count - a.count);
+    const max = sorted[0]?.count || 0;
+    document.getElementById('rankingList').innerHTML = sorted.map((p, rank) => `
+      <div class="rank-chip ${p.count === max && max > 0 ? 'leading' : ''}">
+        <span>${rank === 0 && max > 0 ? '👑' : (rank + 1) + '.'}</span>
+        <span class="rank-name">${p.name}</span>
+        <span class="rank-count">${p.count}</span>
+      </div>
+    `).join('');
+  }
+
+  function resetAll() {
+    if (!confirm('Alles resetten? Dit wist alle tellers.')) return;
+    players.forEach(p => p.count = 0);
+    renderGame();
+  }
+
+  // Close modal on overlay click
+  document.getElementById('modalOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
 </script>
 </body>
 </html>
