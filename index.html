@@ -3,658 +3,199 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🍺 Bakdag Teller</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;600;700&display=swap" rel="stylesheet">
+<title>🍺 Bakdag</title>
 <style>
-  :root {
-    --amber: #E8A020;
-    --dark-amber: #C47A10;
-    --foam: #FFF8E7;
-    --bg: #1A1208;
-    --card: #241A0A;
-    --card-border: #3D2A08;
-    --text: #F5E6C8;
-    --muted: #8A7355;
-    --danger: #E84040;
-    --max: 24;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Barlow', sans-serif;
-    min-height: 100vh;
-    background-image:
-      radial-gradient(ellipse at 20% 0%, rgba(232,160,32,0.08) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 100%, rgba(232,160,32,0.05) 0%, transparent 50%);
-  }
-
-  header {
-    text-align: center;
-    padding: 32px 20px 16px;
-    border-bottom: 1px solid var(--card-border);
-  }
-
-  header h1 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(48px, 10vw, 80px);
-    color: var(--amber);
-    letter-spacing: 4px;
-    line-height: 1;
-    text-shadow: 0 0 40px rgba(232,160,32,0.3);
-  }
-
-  header p {
-    color: var(--muted);
-    font-size: 14px;
-    margin-top: 6px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-  }
-
-  .setup-panel {
-    max-width: 480px;
-    margin: 40px auto;
-    padding: 0 20px;
-  }
-
-  .setup-panel h2 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 28px;
-    letter-spacing: 2px;
-    color: var(--amber);
-    margin-bottom: 20px;
-  }
-
-  .player-input-row {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 12px;
-  }
-
-  input[type="text"] {
-    flex: 1;
-    background: var(--card);
-    border: 1px solid var(--card-border);
-    color: var(--text);
-    padding: 12px 16px;
-    font-family: 'Barlow', sans-serif;
-    font-size: 16px;
-    border-radius: 4px;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-
-  input[type="text"]:focus {
-    border-color: var(--amber);
-  }
-
-  input[type="text"]::placeholder {
-    color: var(--muted);
-  }
-
-  .btn {
-    background: var(--amber);
-    color: var(--bg);
-    border: none;
-    padding: 12px 20px;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 18px;
-    letter-spacing: 1px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background 0.15s, transform 0.1s;
-    white-space: nowrap;
-  }
-
-  .btn:hover { background: var(--dark-amber); }
-  .btn:active { transform: scale(0.97); }
-
-  .btn-outline {
-    background: transparent;
-    color: var(--amber);
-    border: 1px solid var(--amber);
-  }
-
-  .btn-outline:hover {
-    background: rgba(232,160,32,0.1);
-  }
-
-  .btn-start {
-    width: 100%;
-    padding: 16px;
-    font-size: 24px;
-    margin-top: 24px;
-  }
-
-  .player-list-setup {
-    list-style: none;
-    margin-bottom: 16px;
-  }
-
-  .player-list-setup li {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: var(--card);
-    border: 1px solid var(--card-border);
-    padding: 10px 14px;
-    border-radius: 4px;
-    margin-bottom: 8px;
-    font-size: 15px;
-  }
-
-  .remove-btn {
-    background: none;
-    border: none;
-    color: var(--muted);
-    cursor: pointer;
-    font-size: 18px;
-    line-height: 1;
-    padding: 2px 6px;
-    border-radius: 3px;
-    transition: color 0.15s, background 0.15s;
-  }
-
-  .remove-btn:hover {
-    color: var(--danger);
-    background: rgba(232,64,64,0.1);
-  }
-
-  /* === GAME === */
-  .game-panel { display: none; }
-
-  .game-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--card-border);
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
-  .game-header .total-info {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 22px;
-    color: var(--muted);
-    letter-spacing: 1px;
-  }
-
-  .game-header .total-info span {
-    color: var(--amber);
-    font-size: 28px;
-  }
-
-  .players-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 16px;
-    padding: 24px 20px;
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-
-  .player-card {
-    background: var(--card);
-    border: 1px solid var(--card-border);
-    border-radius: 8px;
-    padding: 20px;
-    position: relative;
-    overflow: hidden;
-    transition: border-color 0.2s;
-  }
-
-  .player-card::before {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 3px;
-    background: var(--amber);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.4s ease;
-  }
-
-  .player-card.done {
-    border-color: var(--amber);
-    background: #2A1F08;
-  }
-
-  .player-card.done::before {
-    transform: scaleX(1);
-  }
-
-  .player-name {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 26px;
-    letter-spacing: 2px;
-    color: var(--text);
-    margin-bottom: 12px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .progress-bar-wrap {
-    background: var(--bg);
-    border-radius: 2px;
-    height: 6px;
-    margin-bottom: 16px;
-    overflow: hidden;
-  }
-
-  .progress-bar-fill {
-    height: 100%;
-    background: var(--amber);
-    border-radius: 2px;
-    transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-
-  .count-display {
-    display: flex;
-    align-items: baseline;
-    gap: 6px;
-    margin-bottom: 16px;
-  }
-
-  .count-number {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 64px;
-    line-height: 1;
-    color: var(--amber);
-    text-shadow: 0 0 20px rgba(232,160,32,0.2);
-    transition: transform 0.15s;
-  }
-
-  .count-number.bump {
-    transform: scale(1.2);
-  }
-
-  .count-total {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 22px;
-    color: var(--muted);
-  }
-
-  .pint-btn {
-    width: 100%;
-    padding: 14px;
-    font-size: 20px;
-    background: rgba(232,160,32,0.12);
-    color: var(--amber);
-    border: 1px solid rgba(232,160,32,0.3);
-    border-radius: 4px;
-    font-family: 'Bebas Neue', sans-serif;
-    letter-spacing: 2px;
-    cursor: pointer;
-    transition: background 0.15s, transform 0.1s, border-color 0.15s;
-    position: relative;
-  }
-
-  .pint-btn:hover:not(:disabled) {
-    background: rgba(232,160,32,0.22);
-    border-color: var(--amber);
-  }
-
-  .pint-btn:active:not(:disabled) {
-    transform: scale(0.97);
-  }
-
-  .pint-btn:disabled {
-    cursor: not-allowed;
-    opacity: 0.4;
-  }
-
-  .done-badge {
-    display: none;
-    text-align: center;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 20px;
-    letter-spacing: 3px;
-    color: var(--amber);
-    padding: 10px;
-    border: 1px solid var(--amber);
-    border-radius: 4px;
-    background: rgba(232,160,32,0.08);
-  }
-
-  .player-card.done .pint-btn { display: none; }
-  .player-card.done .done-badge { display: block; }
-
-  /* Confirm modal */
-  .modal-overlay {
-    display: flex;
-    visibility: hidden;
-    opacity: 0;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.75);
-    z-index: 100;
-    align-items: center;
-    justify-content: center;
-    transition: opacity 0.2s;
-  }
-
-  .modal-overlay.active { visibility: visible; opacity: 1; }
-
-  .modal {
-    background: var(--card);
-    border: 1px solid var(--amber);
-    border-radius: 8px;
-    padding: 32px 28px;
-    max-width: 340px;
-    width: 90%;
-    text-align: center;
-    box-shadow: 0 0 60px rgba(232,160,32,0.15);
-  }
-
-  .modal .pint-icon {
-    font-size: 52px;
-    margin-bottom: 12px;
-    display: block;
-  }
-
-  .modal h3 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 28px;
-    letter-spacing: 2px;
-    color: var(--amber);
-    margin-bottom: 8px;
-  }
-
-  .modal p {
-    color: var(--muted);
-    font-size: 15px;
-    margin-bottom: 24px;
-    line-height: 1.5;
-  }
-
-  .modal p strong {
-    color: var(--text);
-  }
-
-  .modal-btns {
-    display: flex;
-    gap: 10px;
-  }
-
-  .modal-btns .btn {
-    flex: 1;
-    font-size: 18px;
-    padding: 13px;
-  }
-
-  /* Leaderboard / ranking */
-  .ranking-bar {
-    background: var(--card);
-    border-top: 1px solid var(--card-border);
-    padding: 16px 20px;
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-
-  .ranking-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 20px;
-    letter-spacing: 2px;
-    color: var(--muted);
-    margin-bottom: 12px;
-  }
-
-  .ranking-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .rank-chip {
-    background: var(--bg);
-    border: 1px solid var(--card-border);
-    border-radius: 20px;
-    padding: 5px 14px;
-    font-size: 14px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: border-color 0.3s;
-  }
-
-  .rank-chip .rank-name { color: var(--text); }
-  .rank-chip .rank-count { color: var(--amber); font-weight: 700; }
-
-  .rank-chip.leading {
-    border-color: var(--amber);
-    background: rgba(232,160,32,0.08);
-  }
-
-  /* Victory screen */
-  .victory { display: none; text-align: center; padding: 60px 20px; }
-  .victory h2 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(48px, 12vw, 96px);
-    color: var(--amber);
-    letter-spacing: 4px;
-    text-shadow: 0 0 60px rgba(232,160,32,0.5);
-    margin-bottom: 16px;
-  }
-
-  .confetti-row {
-    font-size: 40px;
-    margin-bottom: 24px;
-    animation: sway 2s ease-in-out infinite;
-  }
-
-  @keyframes sway {
-    0%, 100% { transform: rotate(-3deg); }
-    50% { transform: rotate(3deg); }
-  }
-
-  .victory p { color: var(--muted); font-size: 16px; }
-
-  /* Utility */
-  .hidden { display: none !important; }
-  .text-muted { color: var(--muted); }
-
-  @keyframes popIn {
-    0% { transform: scale(0.8); opacity: 0; }
-    70% { transform: scale(1.1); }
-    100% { transform: scale(1); opacity: 1; }
-  }
-
-  .pop { animation: popIn 0.3s ease forwards; }
+#bk{font-family:sans-serif;padding:16px;background:#1a1208;min-height:100vh;color:#f5e6c8;}
+#bk h1{text-align:center;color:#e8a020;font-size:40px;margin:0 0 20px;}
+#bk input{width:55%;padding:10px;font-size:15px;background:#241a0a;color:#f5e6c8;border:1px solid #e8a020;border-radius:4px;}
+.abtn{padding:10px 14px;font-size:15px;background:#e8a020;color:#000;border:none;border-radius:4px;cursor:pointer;margin-left:6px;}
+#bk ul{list-style:none;padding:0;margin:10px 0;}
+#bk ul li{background:#241a0a;border:1px solid #3d2a08;padding:8px 12px;margin-bottom:6px;border-radius:4px;display:flex;justify-content:space-between;color:#f5e6c8;}
+#bk ul li button{background:none;border:none;color:#e84040;font-size:18px;cursor:pointer;}
+#startBtn{display:none;width:100%;padding:13px;font-size:19px;background:#e8a020;color:#000;border:none;border-radius:6px;cursor:pointer;margin-top:10px;}
+#game{display:none;}
+.game-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;}
+.game-top span{font-size:16px;color:#8a7355;}
+.game-top span b{color:#e8a020;font-size:20px;}
+.topbtns{display:flex;gap:8px;}
+.resetbtn{padding:8px 14px;font-size:14px;background:transparent;color:#e84040;border:1px solid #e84040;border-radius:4px;cursor:pointer;}
+.resetbtn.confirm-reset{background:#e84040;color:#fff;font-weight:bold;}
+.addbtn2{padding:8px 14px;font-size:14px;background:transparent;color:#e8a020;border:1px solid #e8a020;border-radius:4px;cursor:pointer;}
+#addForm{display:none;background:#241a0a;border:1px solid #e8a020;border-radius:8px;padding:12px;margin-bottom:14px;}
+#addForm p{font-size:13px;color:#8a7355;margin:0 0 8px;}
+#addForm .row2{display:flex;gap:8px;}
+#addForm input{flex:1;padding:9px;font-size:15px;background:#1a1208;color:#f5e6c8;border:1px solid #3d2a08;border-radius:4px;}
+#addForm input:focus{border-color:#e8a020;outline:none;}
+#addForm .cbtn{padding:9px 14px;font-size:14px;background:#e8a020;color:#000;border:none;border-radius:4px;cursor:pointer;}
+#addForm .xcbtn{padding:9px 14px;font-size:14px;background:transparent;color:#8a7355;border:1px solid #3d2a08;border-radius:4px;cursor:pointer;}
+.card{background:#241a0a;border:2px solid #3d2a08;border-radius:8px;padding:14px;margin-bottom:12px;}
+.card.done{border-color:#e8a020;}
+.card h2{margin:0 0 6px;font-size:24px;color:#f5e6c8;}
+.card .num{font-size:60px;color:#e8a020;line-height:1;}
+.card .sub{color:#8a7355;margin-bottom:10px;font-size:14px;}
+.card .pb{width:100%;padding:13px;font-size:16px;background:rgba(232,160,32,0.15);color:#e8a020;border:2px solid #e8a020;border-radius:6px;cursor:pointer;}
+.card .pb.armed{background:#e8a020;color:#000;font-weight:bold;}
+.card.done .pb{display:none;}
+.card .bdg{display:none;text-align:center;padding:10px;border:1px solid #e8a020;border-radius:4px;color:#e8a020;font-size:18px;}
+.card.done .bdg{display:block;}
+#lb{background:#241a0a;border:1px solid #3d2a08;border-radius:8px;padding:14px;margin-top:8px;}
+#lb h3{color:#8a7355;font-size:14px;letter-spacing:2px;text-transform:uppercase;margin:0 0 10px;}
+.lrow{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #3d2a08;}
+.lrow:last-child{border-bottom:none;}
+.lpos{font-size:18px;width:28px;text-align:center;}
+.lname{flex:1;font-size:16px;color:#f5e6c8;}
+.lcount{font-size:20px;font-weight:bold;color:#e8a020;}
+.lbar{height:4px;background:#3d2a08;border-radius:2px;margin-top:4px;}
+.lbarfill{height:100%;background:#e8a020;border-radius:2px;transition:width 0.4s;}
 </style>
 </head>
 <body>
-
-<header>
-  <h1>🍺 Bakdag</h1>
-  <p>24 pinten · niemand liegt · iedereen telt</p>
-</header>
-
-<!-- SETUP -->
-<div class="setup-panel" id="setupPanel">
-  <h2>Wie drinkt mee?</h2>
-
-  <div class="player-input-row">
-    <input type="text" id="nameInput" placeholder="Naam speler…" maxlength="20" autocomplete="off" />
-    <button class="btn" onclick="addPlayer()">+ Toevoegen</button>
-  </div>
-
-  <ul class="player-list-setup" id="playerListSetup"></ul>
-
-  <button class="btn btn-start" id="startBtn" onclick="startGame()" style="display:none">
-    🍺 Start de Bakdag
-  </button>
+<div id="bk">
+<h1>🍺 Bakdag</h1>
+<div id="setup">
+  <div><input id="ni" type="text" placeholder="Naam speler…" maxlength="20"><button class="abtn" id="ab">+ Voeg toe</button></div>
+  <ul id="pl"></ul>
+  <button id="startBtn">🍺 Start Bakdag</button>
 </div>
-
-<!-- GAME -->
-<div class="game-panel" id="gamePanel">
-  <div class="game-header">
-    <div class="total-info">Totaal gedronken: <span id="totalDrunk">0</span></div>
-    <button class="btn btn-outline" onclick="resetAll()" style="font-size:15px;padding:8px 14px">↩ Reset</button>
-  </div>
-
-  <div class="players-grid" id="playersGrid"></div>
-
-  <div class="ranking-bar" id="rankingBar">
-    <div class="ranking-title">Ranglijst</div>
-    <div class="ranking-list" id="rankingList"></div>
-  </div>
-</div>
-
-<!-- MODAL -->
-<div class="modal-overlay" id="modalOverlay">
-  <div class="modal">
-    <span class="pint-icon">🍺</span>
-    <h3>Pint bevestigen</h3>
-    <p id="modalText">…</p>
-    <div class="modal-btns">
-      <button class="btn btn-outline" onclick="closeModal()">Annuleer</button>
-      <button class="btn" onclick="confirmPint()">Ja, opdrinken!</button>
+<div id="game">
+  <div class="game-top">
+    <span>Totaal: <b id="tn">0</b></span>
+    <div class="topbtns">
+      <button class="addbtn2" id="showAddBtn">+ Speler</button>
+      <button class="resetbtn" id="resetBtn">↩ Reset</button>
     </div>
   </div>
+  <div id="addForm">
+    <p>Nieuwe speler toevoegen</p>
+    <div class="row2">
+      <input id="ni2" type="text" placeholder="Naam…" maxlength="20">
+      <button class="cbtn" id="addMidBtn">+ Voeg toe</button>
+      <button class="xcbtn" id="cancelAddBtn">✕</button>
+    </div>
+  </div>
+  <div id="cards"></div>
+  <div id="lb"><h3>🏆 Leaderboard</h3><div id="lbrows"></div></div>
 </div>
-
+</div>
 <script>
-  const MAX = 24;
-  let players = [];
-  let pendingPlayer = null;
-
-  const nameInput = document.getElementById('nameInput');
-  nameInput.addEventListener('keydown', e => { if (e.key === 'Enter') addPlayer(); });
-
-  function addPlayer() {
-    const name = nameInput.value.trim();
-    if (!name) return;
-    if (players.find(p => p.name.toLowerCase() === name.toLowerCase())) {
-      nameInput.style.borderColor = 'var(--danger)';
-      setTimeout(() => nameInput.style.borderColor = '', 1000);
-      return;
-    }
-    players.push({ name, count: 0 });
-    nameInput.value = '';
-    nameInput.focus();
-    renderSetupList();
+var MAX=24,players=[],armed={},resetTimer=null;
+document.getElementById('ab').addEventListener('click',addP);
+document.getElementById('ni').addEventListener('keydown',function(e){if(e.key==='Enter')addP();});
+document.getElementById('startBtn').addEventListener('click',startG);
+document.getElementById('showAddBtn').addEventListener('click',function(){
+  document.getElementById('addForm').style.display='block';
+  document.getElementById('ni2').focus();
+});
+document.getElementById('cancelAddBtn').addEventListener('click',function(){
+  document.getElementById('addForm').style.display='none';
+  document.getElementById('ni2').value='';
+});
+document.getElementById('addMidBtn').addEventListener('click',addMid);
+document.getElementById('ni2').addEventListener('keydown',function(e){if(e.key==='Enter')addMid();});
+document.getElementById('resetBtn').addEventListener('click',function(){
+  var btn=document.getElementById('resetBtn');
+  if(resetTimer){
+    clearTimeout(resetTimer);resetTimer=null;
+    players.forEach(function(p){p.count=0;});
+    armed={};
+    btn.className='resetbtn';btn.textContent='↩ Reset';
+    buildC();
+  } else {
+    btn.className='resetbtn confirm-reset';btn.textContent='⚠️ Zeker? Nogmaals!';
+    resetTimer=setTimeout(function(){
+      btn.className='resetbtn';btn.textContent='↩ Reset';
+      resetTimer=null;
+    },4000);
   }
-
-  function removePlayer(idx) {
-    players.splice(idx, 1);
-    renderSetupList();
-  }
-
-  function renderSetupList() {
-    const ul = document.getElementById('playerListSetup');
-    ul.innerHTML = players.map((p, i) => `
-      <li>
-        <span>🧍 ${p.name}</span>
-        <button class="remove-btn" onclick="removePlayer(${i})">✕</button>
-      </li>
-    `).join('');
-    document.getElementById('startBtn').style.display = players.length >= 2 ? 'block' : 'none';
-  }
-
-  function startGame() {
-    if (players.length < 2) return;
-    document.getElementById('setupPanel').style.display = 'none';
-    document.getElementById('gamePanel').style.display = 'block';
-    renderGame();
-  }
-
-  function renderGame() {
-    const grid = document.getElementById('playersGrid');
-    grid.innerHTML = players.map((p, i) => `
-      <div class="player-card ${p.count >= MAX ? 'done' : ''}" id="card-${i}">
-        <div class="player-name">${p.name}</div>
-        <div class="progress-bar-wrap">
-          <div class="progress-bar-fill" id="bar-${i}" style="width:${(p.count/MAX)*100}%"></div>
-        </div>
-        <div class="count-display">
-          <div class="count-number" id="num-${i}">${p.count}</div>
-          <div class="count-total">/ ${MAX}</div>
-        </div>
-        <button class="pint-btn" onclick="requestPint(${i})" id="btn-${i}" ${p.count >= MAX ? 'disabled' : ''}>
-          🍺 Pint Bijschrijven
-        </button>
-        <div class="done-badge">✔ GEDAAN!</div>
-      </div>
-    `).join('');
-    updateRanking();
-    updateTotal();
-  }
-
-  function requestPint(idx) {
-    pendingPlayer = idx;
-    const p = players[idx];
-    document.getElementById('modalText').innerHTML =
-      `<strong>${p.name}</strong> staat op ${p.count} pinten.<br>Pint ${p.count + 1} bijschrijven?`;
-    document.getElementById('modalOverlay').classList.add('active');
-  }
-
-  function closeModal() {
-    document.getElementById('modalOverlay').classList.remove('active');
-    pendingPlayer = null;
-  }
-
-  function confirmPint() {
-    if (pendingPlayer === null) return;
-    closeModal();
-    const i = pendingPlayer;
-    const p = players[i];
-    if (p.count >= MAX) return;
-    p.count++;
-
-    // Update bar
-    document.getElementById(`bar-${i}`).style.width = `${(p.count/MAX)*100}%`;
-
-    // Bump number
-    const numEl = document.getElementById(`num-${i}`);
-    numEl.textContent = p.count;
-    numEl.classList.remove('bump');
-    void numEl.offsetWidth;
-    numEl.classList.add('bump');
-    setTimeout(() => numEl.classList.remove('bump'), 200);
-
-    if (p.count >= MAX) {
-      const card = document.getElementById(`card-${i}`);
-      card.classList.add('done');
-    }
-
-    updateTotal();
-    updateRanking();
-    pendingPlayer = null;
-  }
-
-  function updateTotal() {
-    const total = players.reduce((s, p) => s + p.count, 0);
-    document.getElementById('totalDrunk').textContent = total;
-  }
-
-  function updateRanking() {
-    const sorted = [...players].sort((a, b) => b.count - a.count);
-    const max = sorted[0]?.count || 0;
-    document.getElementById('rankingList').innerHTML = sorted.map((p, rank) => `
-      <div class="rank-chip ${p.count === max && max > 0 ? 'leading' : ''}">
-        <span>${rank === 0 && max > 0 ? '👑' : (rank + 1) + '.'}</span>
-        <span class="rank-name">${p.name}</span>
-        <span class="rank-count">${p.count}</span>
-      </div>
-    `).join('');
-  }
-
-  function resetAll() {
-    if (!confirm('Alles resetten? Dit wist alle tellers.')) return;
-    players.forEach(p => p.count = 0);
-    renderGame();
-  }
-
-  // Close modal on overlay click
-  document.getElementById('modalOverlay').addEventListener('click', function(e) {
-    if (e.target === this) closeModal();
+});
+function addP(){
+  var inp=document.getElementById('ni'),name=inp.value.trim();
+  if(!name)return;
+  players.push({name:name,count:0});
+  inp.value='';inp.focus();
+  renderL();
+}
+function addMid(){
+  var inp=document.getElementById('ni2'),name=inp.value.trim();
+  if(!name)return;
+  players.push({name:name,count:0});
+  inp.value='';
+  document.getElementById('addForm').style.display='none';
+  addCard(players.length-1);
+  upTot();upLB();
+}
+function renderL(){
+  var ul=document.getElementById('pl');
+  ul.innerHTML='';
+  players.forEach(function(p,i){
+    var li=document.createElement('li');
+    li.textContent=p.name;
+    var d=document.createElement('button');
+    d.textContent='✕';
+    d.addEventListener('click',(function(idx){return function(){players.splice(idx,1);renderL();};})(i));
+    li.appendChild(d);ul.appendChild(li);
   });
+  document.getElementById('startBtn').style.display=players.length>=2?'block':'none';
+}
+function startG(){
+  document.getElementById('setup').style.display='none';
+  document.getElementById('game').style.display='block';
+  buildC();
+}
+function buildC(){
+  document.getElementById('cards').innerHTML='';
+  players.forEach(function(p,idx){addCard(idx);});
+  upTot();upLB();
+}
+function addCard(idx){
+  var p=players[idx];
+  var card=document.createElement('div');
+  card.className='card'+(p.count>=MAX?' done':'');
+  card.id='card'+idx;
+  var h=document.createElement('h2');h.textContent=p.name;
+  var n=document.createElement('div');n.className='num';n.id='num'+idx;n.textContent=p.count;
+  var s=document.createElement('div');s.className='sub';s.textContent='/ '+MAX+' pinten';
+  var btn=document.createElement('button');btn.className='pb';btn.id='btn'+idx;
+  btn.textContent='🍺 Pint bijschrijven';
+  btn.addEventListener('click',(function(i){return function(){tap(i);};})(idx));
+  var bdg=document.createElement('div');bdg.className='bdg';bdg.textContent='✔ GEDAAN!';
+  card.appendChild(h);card.appendChild(n);card.appendChild(s);card.appendChild(btn);card.appendChild(bdg);
+  document.getElementById('cards').appendChild(card);
+}
+function tap(idx){
+  var p=players[idx];
+  if(p.count>=MAX)return;
+  var btn=document.getElementById('btn'+idx);
+  if(armed[idx]){
+    clearTimeout(armed[idx]);delete armed[idx];
+    p.count++;
+    document.getElementById('num'+idx).textContent=p.count;
+    btn.className='pb';btn.textContent='🍺 Pint bijschrijven';
+    if(p.count>=MAX)document.getElementById('card'+idx).className='card done';
+    upTot();upLB();
+  } else {
+    btn.className='pb armed';btn.textContent='✅ Nogmaals tikken!';
+    armed[idx]=setTimeout(function(){
+      btn.className='pb';btn.textContent='🍺 Pint bijschrijven';
+      delete armed[idx];
+    },4000);
+  }
+}
+function upTot(){
+  var t=0;players.forEach(function(p){t+=p.count;});
+  document.getElementById('tn').textContent=t;
+}
+function upLB(){
+  var sorted=players.slice().sort(function(a,b){return b.count-a.count;});
+  var top=sorted[0]?sorted[0].count:0;
+  var html='';
+  sorted.forEach(function(p,i){
+    var icon=i===0&&top>0?'👑':i===1?'🥈':i===2?'🥉':(i+1)+'.';
+    var pct=top>0?Math.round(p.count/top*100):0;
+    html+='<div class="lrow"><span class="lpos">'+icon+'</span><div style="flex:1"><div style="display:flex;justify-content:space-between;align-items:center"><span class="lname">'+p.name+'</span><span class="lcount">'+p.count+'</span></div><div class="lbar"><div class="lbarfill" style="width:'+pct+'%"></div></div></div></div>';
+  });
+  document.getElementById('lbrows').innerHTML=html;
+}
 </script>
 </body>
 </html>
